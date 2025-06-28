@@ -1,5 +1,5 @@
 <?php
-require_once 'db/Conn.php';
+require_once '../../../db/Conn.php';
 
 class Cursos
 {
@@ -12,9 +12,9 @@ class Cursos
 
     public function mostrar(){
         $conn = new Conn();
-        $conexion = $conm->conectar();
-        $sql = "SELECT * FROM cursos";
+        $conexion = $conn->conectar();
+        $sql = "SELECT * FROM curso";
         $respuesta = $conexion->query($sql);
-        $conn->cerrarConexion();
+        $conn->cerrar();
     }
 }

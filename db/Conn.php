@@ -2,7 +2,10 @@
 
 class Conn
 {
-    private $conn;
+    private $dsn;
+    private $usuario;
+    private $pass;
+    private $conexion;
 
     public function __construct()
     {
