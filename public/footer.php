@@ -15,15 +15,5 @@
             </div>
         </div>
     </footer>
-
-    <script>
-        // Newsletter form submission
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input[type="email"]').value;
-            alert('Thank you for subscribing with email: ' + email);
-            this.reset();
-        });
-    </script>
 </body>
 </html>
