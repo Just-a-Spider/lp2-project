@@ -18,7 +18,7 @@ class Conn
             $host = '127.0.0.1';
             $db   = 'sistema_matriculas';
             $user = 'root';
-            $password = '0116';
+            $password = '';
             try {
                 $this->conn = new PDO(
                     "mysql:host={$host};dbname={$db};charset=utf8;",
