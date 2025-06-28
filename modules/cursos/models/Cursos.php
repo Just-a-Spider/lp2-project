@@ -16,5 +16,6 @@ class Cursos
         $sql = "SELECT * FROM curso";
         $respuesta = $conexion->query($sql);
         $conn->cerrar();
+        return $respuesta;
     }
 }
