@@ -74,4 +74,15 @@ class Usuario
         }
         return ['exito' => true, 'data' => $resultado[0]];
     }
+
+    // Métdos de Admin
+    public function buscarAdminPorUsername($username)
+    {
+        $conn = new Conn();
+        $conexion = $conn->obtenerConexion();
+        $sql = "SELECT * FROM admin WHERE username='$username'";
+        $resultado = $conexion->buscar($sql);
+        $conn->cerrarConexion();
+        return $resultado;
+    }
 }
