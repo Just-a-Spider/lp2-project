@@ -7,4 +7,14 @@ class CursosController
         $cursos = new Cursos();
         return $cursos->mostrar();
     }
+    public function eliminar(int $id){
+        $cursos = new Cursos();
+        $resultado = $cursos->eliminar($id);
+        if($resultado){
+            header("Location: verCursos.php");
+        } else {
+            return "Error al eliminar el curso";
+        }
+    }
 }
+
