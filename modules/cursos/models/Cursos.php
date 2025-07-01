@@ -18,4 +18,12 @@ class Cursos
         $conn->cerrar();
         return $respuesta;
     }
+    public function eliminar($id){
+        $conn = new Conn();
+        $conexion = $conn->conectar();
+        $sql = "DELETE FROM curso WHERE id_curso = $id";
+        $respuesta = $conexion->exec($sql);
+        $conn->cerrar();
+        return $respuesta;
+    }
 }
