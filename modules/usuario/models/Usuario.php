@@ -5,70 +5,73 @@ require_once __DIR__ . "/../../../db/Conn.php";
 class Usuario
 {
 
-    public function __construct() {}
+    private $conn = null;
+
+    public function __construct()
+    {
+        $this->conn = new Conn();
+    }
 
     // Métodos de Estudiante
     public function mostrarEstudiantes()
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
         $sql = "SELECT * FROM usuario";
-        $resultado = $conexion->buscar($sql);
-        $conn->cerrarConexion();
-        return $resultado;
+        $resultado = $this->conn->buscar($sql);
+        if (empty($resultado)) {
+            return ['exito' => false, 'mensaje' => 'No se encontraron estudiantes'];
+        }
+        return ['exito' => true, 'data' => $resultado];
     }
 
     public function buscarEstudiantePorUsername(string $username)
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
         $sql = "SELECT * FROM usuario WHERE username='$username'";
-        $resultado = $conexion->buscar($sql)[0] ?? null;
-        $conn->cerrarConexion();
-        return $resultado;
+        $resultado = $this->conn->buscar($sql);
+        if (empty($resultado)) {
+            return ['exito' => false, 'mensaje' => 'Estudiante no encontrado'];
+        }
+        return ['exito' => true, 'data' => $resultado[0]];
     }
 
     public function registrarEstudiante($username, $nombres, $apellidos, $password, $email, $telefono, $direccion)
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $sql = "INSERT INTO usuario(username, nombres, apellidos, password, email, telefono, direccion) 
-        VALUES('$username','$nombres','$apellidos','$hashedPassword','$email','$telefono','$direccion')";
-        $resultado = $conexion->correr($sql);
-        $conn->cerrarConexion();
-        return $resultado;
+        VALUES('$username','$nombres','$apellidos','$password','$email','$telefono','$direccion')";
+        $resultado = $this->conn->correr($sql);
+        if (!$resultado) {
+            return ['exito' => false, 'mensaje' => 'Error al registrar el estudiante'];
+        }
+        return ['exito' => true, 'mensaje' => 'Estudiante registrado exitosamente'];
     }
-
 
     public function eliminarEstudiante($id)
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
         $sql = "DELETE FROM usuario WHERE id=$id";
-        $resultado = $conexion->correr($sql);
-        $conn->cerrarConexion();
-        return $resultado;
+        $resultado = $this->conn->correr($sql);
+        if (!$resultado) {
+            return ['exito' => false, 'mensaje' => 'Error al eliminar el estudiante'];
+        }
+        return ['exito' => true, 'mensaje' => 'Estudiante eliminado exitosamente'];
     }
 
     public function actualizarEstudiante($username, $nombres, $apellidos, $telefono, $direccion, $id)
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
         $sql = "UPDATE usuario SET username= '$username',nombres='$nombres',apellidos ='$apellidos',telefono='$telefono',direccion='$direccion' WHERE id=$id";
-        $resultado = $conexion->correr($sql);
-        $conn->cerrarConexion();
-        return $resultado;
+        $resultado = $this->conn->correr($sql);
+        if (!$resultado) {
+            return ['exito' => false, 'mensaje' => 'Error al actualizar el estudiante'];
+        }
+        return ['exito' => true, 'mensaje' => 'Estudiante actualizado exitosamente'];
     }
 
-    // Métdos de Admin
+    // Métodos de Admin
     public function buscarAdminPorUsername($username)
     {
-        $conn = new Conn();
-        $conexion = $conn->obtenerConexion();
-        $sql = "SELECT * FROM admin WHERE username='$username'";
-        $resultado = $conexion->buscar($sql);
-        $conn->cerrarConexion();
-        return $resultado;
+        $sql = "SELECT * FROM usuario WHERE username='$username' AND tipo='admin'";
+        $resultado = $this->conn->buscar($sql);
+        if (empty($resultado)) {
+            return ['exito' => false, 'mensaje' => 'Administrador no encontrado'];
+        }
+        return ['exito' => true, 'data' => $resultado[0]];
     }
 }

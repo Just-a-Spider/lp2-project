@@ -1,0 +1,20 @@
+[
+  {
+    "id_aula": 1,
+    "nombre": "Aula 101",
+    "disponibilidad": "disponible",
+    "capacidad": 30
+  },
+  {
+    "id_aula": 2,
+    "nombre": "Aula 102",
+    "disponibilidad": "ocupada",
+    "capacidad": 25
+  },
+  {
+    "id_aula": 3,
+    "nombre": "Aula 103",
+    "disponibilidad": "disponible",
+    "capacidad": 20
+  }
+]

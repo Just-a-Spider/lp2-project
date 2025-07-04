@@ -27,7 +27,7 @@ CREATE TABLE aula (
 CREATE TABLE curso (
     id_curso INT PRIMARY KEY AUTO_INCREMENT,
     nombre_curso VARCHAR(100),
-    duracion VARCHAR(50),
+    duracion INT, -- Duración en semanas
     estado ENUM('activo', 'inactivo') DEFAULT 'activo',
     costo DECIMAL(10,2) NOT NULL,
     id_aula INT,
@@ -77,3 +77,14 @@ CREATE TABLE asistencia (
     FOREIGN KEY (id_estudiante) REFERENCES usuario(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_horario) REFERENCES horario(id_horario) ON DELETE CASCADE
 );
+
+-- Datos de prueba
+
+-- Usuario Administrador (contraseña: admin123)
+INSERT INTO usuario (nombres, apellidos, email, telefono, direccion, password, username, tipo)
+VALUES ('Admin', 'User', 'admin@academia.com', '123456789', 'Calle Falsa 123', '$2y$12$vYmfW7R4pmeTeNQJECgvx.09vkccoFfU1qVHSpE7q14XaXgj7SCn.', 'admin', 'admin');
+
+-- Aulas
+INSERT INTO aula (nombre, disponibilidad, capacidad) VALUES ('Aula 101', 'disponible', 30);
+INSERT INTO aula (nombre, disponibilidad, capacidad) VALUES ('Aula 102', 'disponible', 25);
+INSERT INTO aula (nombre, disponibilidad, capacidad) VALUES ('Aula 103', 'ocupado', 20);

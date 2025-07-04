@@ -1,44 +1,59 @@
 <?php
 require_once __DIR__ . "/../models/Usuario.php";
 
-class EstudianteController {
+class EstudianteController
+{
     private $modelo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->modelo = new Usuario();
     }
 
-    public function login($username, $password) {
-        $estudiante = $this->modelo->buscarEstudiantePorUsername($username);
-        
-        if ($estudiante) {
+    public function login($username, $password)
+    {
+        $resultado = $this->modelo->buscarEstudiantePorUsername($username);
+
+        if ($resultado['exito']) {
+            $estudiante = $resultado['data'];
             if (password_verify($password, $estudiante['password'])) {
-                session_start();
-                $_SESSION['estudiante_id'] = $estudiante['id'];
+                if (session_status() == PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['estudiante_id'] = $estudiante['id_usuario'];
                 $_SESSION['estudiante_username'] = $estudiante['username'];
                 $_SESSION['estudiante_nombres'] = $estudiante['nombres'];
                 $_SESSION['estudiante_apellidos'] = $estudiante['apellidos'];
                 $_SESSION['tipo_usuario'] = 'estudiante';
                 return ['exito' => true, 'mensaje' => 'Login exitoso'];
+            } else {
+                return ['exito' => false, 'mensaje' => 'Contraseña incorrecta'];
             }
         }
-        return ['exito' => false, 'mensaje' => 'Credenciales incorrectas'];
+        return ['exito' => false, 'mensaje' => $resultado['mensaje'] ?? 'Credenciales incorrectas'];
     }
 
-    public function logout() {
-        session_start();
+    public function logout()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         session_destroy();
         return ['exito' => true, 'mensaje' => 'Logout exitoso'];
     }
 
-    public function verificarSesion() {
-        session_start();
+    public function verificarSesion()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         return isset($_SESSION['estudiante_id']) && $_SESSION['tipo_usuario'] === 'estudiante';
     }
 
-    public function registrarse($username, $nombres, $apellidos, $password, $email, $telefono, $direccion) {
+    public function registrarse($username, $nombres, $apellidos, $password, $email, $telefono, $direccion)
+    {
         // Verificar si el username ya existe
-        $existeUsuario = $this->modelo->buscarEstudiantePorUsername($username);
+        $existeUsuario = ($this->modelo->buscarEstudiantePorUsername($username))['exito'];
         if ($existeUsuario) {
             return ['exito' => false, 'mensaje' => 'El username ya existe'];
         }
@@ -53,22 +68,27 @@ class EstudianteController {
             return ['exito' => false, 'mensaje' => 'El formato del email no es válido'];
         }
 
-        $resultado = $this->modelo->registrarEstudiante($username, $nombres, $apellidos, $password, $email, $telefono, $direccion);
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $resultado = $this->modelo->registrarEstudiante($username, $nombres, $apellidos, $hashedPassword, $email, $telefono, $direccion);
         if ($resultado) {
             return ['exito' => true, 'mensaje' => 'Registro exitoso. Ya puedes iniciar sesión'];
         }
         return ['exito' => false, 'mensaje' => 'Error al registrar usuario'];
     }
 
-    public function obtenerPerfil() {
+    public function obtenerPerfil()
+    {
         if (!$this->verificarSesion()) {
             return ['exito' => false, 'mensaje' => 'No autorizado'];
         }
 
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $username = $_SESSION['estudiante_username'];
         $estudiante = $this->modelo->buscarEstudiantePorUsername($username);
-        
+
         if ($estudiante) {
             // Remover la contraseña de los datos retornados
             unset($estudiante['password']);
@@ -77,12 +97,15 @@ class EstudianteController {
         return ['exito' => false, 'mensaje' => 'Usuario no encontrado'];
     }
 
-    public function actualizarPerfil($nombres, $apellidos, $email, $telefono, $direccion) {
+    public function actualizarPerfil($nombres, $apellidos, $email, $telefono, $direccion)
+    {
         if (!$this->verificarSesion()) {
             return ['exito' => false, 'mensaje' => 'No autorizado'];
         }
 
-        session_start();
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
         $id = $_SESSION['estudiante_id'];
         $username = $_SESSION['estudiante_username'];
 

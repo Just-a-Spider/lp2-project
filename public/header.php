@@ -1,11 +1,31 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+$esEstudiante = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'estudiante';
+$esAdmin = isset($_SESSION['tipo_usuario']) && $_SESSION['tipo_usuario'] === 'admin';
+
+$estudianteLogin = "/modules/usuario/views/estudiante-login.php";
+$estudianteRegistro = "/modules/usuario/views/estudiante-registro.php";
+$adminLogin = "/modules/usuario/views/admin-login.php";
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-50">
+
+<body class="bg-gray-50 min-h-screen flex flex-col">
     <header class="bg-white shadow-sm border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
@@ -19,15 +39,48 @@
                     </div>
                 </div>
 
-                <!-- Desktop CTA Buttons -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
-                        Iniciar Sesión
-                    </a>
-                    <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                        Regístrate
-                    </a>
-                </div>
+                <?php if ($esEstudiante): ?>
+                    <!-- Student Navigation -->
+                    <nav class="hidden md:flex space-x-4">
+                        <a href="/modules/curso/views/estudiante/lista-cursos.php" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                            Cursos Disponibles
+                        </a>
+                        <a href="/modules/matricula/views/estudiante/mis-cursos.php" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                            Mis Cursos
+                        </a>
+                        <a href="/modules/usuario/views/estudiante-logout.php" class="bg-red-500 hover:bg-red-700 text-white rounded-xl px-3 py-2 text-sm">
+                            Cerrar Sesión
+                        </a>
+                    </nav>
+
+                <?php elseif ($esAdmin): ?>
+                    <!-- Admin Navigation -->
+                    <nav class="hidden md:flex space-x-4">
+                        <a href="/modules/curso/views/admin/lista-curso.php" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                            Listar Cursos
+                        </a>
+                        <a href="/modules/curso/views/admin/crear-curso.php" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                            Crear Curso
+                        </a>
+                        <a href="/modules/usuario/views/admin-logout.php" class="bg-red-500 hover:bg-red-700 text-white rounded-xl px-3 py-2 text-sm">
+                            Cerrar Sesión
+                        </a>
+                    </nav>
+
+                <?php else: ?>
+                    <!-- Default CTA Buttons -->
+                    <div class="hidden md:flex items-center space-x-4">
+                        <a href="<?= $estudianteLogin ?>" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors">
+                            Iniciar Sesión
+                        </a>
+                        <a href="<?= $estudianteRegistro ?>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Regístrate
+                        </a>
+                        <a href="<?= $adminLogin ?>" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                            Admin Login
+                        </a>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden">
@@ -44,32 +97,14 @@
         <div class="mobile-menu hidden md:hidden bg-white border-t border-gray-200">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <div class="pt-4 pb-2 border-t border-gray-200">
-                    <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
+                    <a href="/modules/usuario/views/estudiante-login.php" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md transition-colors">
                         Inicair Sesión
                     </a>
-                    <a href="#" class="block px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors mx-3 mt-2 text-center">
+                    <a href="/modules/usuario/views/estudiante-registro.php" class="block px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md transition-colors mx-3 mt-2 text-center">
                         Registrarse
                     </a>
                 </div>
             </div>
         </div>
     </header>
-
-    <script>
-        // Mobile menu toggle functionality
-        const mobileMenuButton = document.querySelector('.mobile-menu-button');
-        const mobileMenu = document.querySelector('.mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-    </script>
-</body>
-</html>
+    <div class="flex-grow">
