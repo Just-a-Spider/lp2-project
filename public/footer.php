@@ -1,19 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
-<body class="bg-gray-50">
-    <footer class="bg-gray-900 text-white">
-        <div class="border-t border-gray-800 py-6">
-            <div class="flex justify-center items-center">
-            <div class="text-center text-sm">
-                <p>&copy; 2025 Academia <span class="text-white font-bold text-lg">E</span>. All rights reserved.</p>
-            </div>
-            </div>
-        </div>
+    </div>
+    <footer class="bg-gray-800 text-white text-center p-4 mt-auto">
+        <p>&copy; <?= date('Y') ?> Academia. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        // Mobile menu toggle functionality
+        const mobileMenuButton = document.querySelector('.mobile-menu-button');
+        const mobileMenu = document.querySelector('.mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
+
 </html>

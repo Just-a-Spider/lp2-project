@@ -14,17 +14,18 @@ class AdminController
     {
         $admin = $this->modelo->buscarAdminPorUsername($username);
 
-        if ($admin && count($admin) > 0) {
-            $adminData = $admin[0];
+        if ($admin['exito']) {
+            $adminData = $admin['data'];
             if (password_verify($password, $adminData['password'])) {
-                session_start();
-                $_SESSION['admin_id'] = $adminData['id'];
+                $_SESSION['admin_id'] = $adminData['id_usuario'];
                 $_SESSION['admin_username'] = $adminData['username'];
                 $_SESSION['tipo_usuario'] = 'admin';
                 return ['exito' => true, 'mensaje' => 'Login exitoso'];
+            } else {
+                return ['exito' => false, 'mensaje' => 'Contraseña incorrecta'];
             }
         }
-        return ['exito' => false, 'mensaje' => 'Credenciales incorrectas'];
+        return ['exito' => false, 'mensaje' => $admin['mensaje'] ?? 'Credenciales incorrectas'];
     }
 
     public function logout()
@@ -34,7 +35,7 @@ class AdminController
         return ['exito' => true, 'mensaje' => 'Logout exitoso'];
     }
 
-    // CRUD operations for students
+    // CRUD para estudiantes por si acaso
     public function listarEstudiantes()
     {
         $estudiantes = $this->modelo->mostrarEstudiantes();
