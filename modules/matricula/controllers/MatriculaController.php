@@ -36,4 +36,9 @@ class MatriculaController
     {
         return $this->modelo->verificarMatricula($id_estudiante, $id_curso);
     }
+
+    public function obtenerInscritosPorCurso($id_curso)
+    {
+        return $this->modelo->obtenerInscritosPorCurso($id_curso);
+    }
 }

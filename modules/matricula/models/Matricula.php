@@ -48,4 +48,14 @@ class Matricula
         $resultado = $this->conn->buscar($sql);
         return !empty($resultado);
     }
+
+    public function obtenerInscritosPorCurso($id_curso)
+    {
+        $sql = "SELECT u.nombres, u.apellidos, u.email, m.fecha as fecha_matricula FROM usuario u JOIN matricula m ON u.id_usuario = m.id_estudiante WHERE m.id_curso = $id_curso";
+        $resultado = $this->conn->buscar($sql);
+        if (empty($resultado)) {
+            return ['exito' => false, 'mensaje' => 'No se encontraron estudiantes inscritos en este curso'];
+        }
+        return ['exito' => true, 'data' => $resultado];
+    }
 }

@@ -4,41 +4,40 @@ require_once __DIR__ . '../../../controllers/CursoController.php';
 
 $controlador = new CursoController();
 $resultado = $controlador->listarDisponibles();
-$cursos = $resultado['data'];
+$cursos = $resultado['exito'] ? $resultado['data'] : [];
 ?>
 
-<div class="max-w-4xl mx-auto mt-10 w-full">
-    <h1 class="text-2xl font-bold mb-6 text-center">Cursos Disponibles</h1>
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">ID</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Nombre</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Duración</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Estado</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Costo</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Aula</th>
-                    <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Acción</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                <?php foreach ($cursos as $curso): ?>
-                    <tr class="hover:bg-gray-50 transition-colors duration-200">
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['id_curso']) ?></td>
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['nombre_curso']) ?></td>
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['duracion']) ?></td>
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['estado']) ?></td>
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['costo']) ?></td>
-                        <td class="py-3 px-4 text-sm text-gray-800"><?= htmlspecialchars($curso['id_aula']) ?></td>
-                        <td class="py-3 px-4 text-sm">
-                            <a href="/modules/curso/views/estudiante/inscribirse.php?id_curso=<?= $curso['id_curso'] ?>" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs">Inscribirse</a>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+<div class="container mx-auto mt-10 p-4">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Cursos Disponibles para Inscripción</h1>
+
+    <?php if (empty($cursos)): ?>
+        <div class="text-center text-gray-500 bg-white p-10 rounded-2xl shadow-md">
+            <p class="text-xl">No hay cursos disponibles en este momento.</p>
+            <p class="mt-2">Por favor, vuelve a consultar más tarde.</p>
+        </div>
+    <?php else: ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <?php foreach ($cursos as $curso): ?>
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300 ease-in-out border border-gray-100 flex flex-col">
+                    <div class="p-6 flex-grow">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-3"><?= htmlspecialchars($curso['nombre_curso']) ?></h2>
+                        
+                        <div class="text-md text-gray-700 space-y-3 mb-6">
+                            <p><span class="font-semibold text-gray-600">Duración:</span> <?= htmlspecialchars($curso['duracion']) ?> Semanas</p>
+                            <p><span class="font-semibold text-gray-600">Aula:</span> Aula <?= htmlspecialchars($curso['id_aula']) ?></p>
+                            <p class="text-2xl font-bold text-blue-600 mt-2">S/ <?= htmlspecialchars(number_format($curso['costo'], 2)) ?></p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4">
+                        <a href="/modules/curso/views/estudiante/inscribirse.php?id_curso=<?= $curso['id_curso'] ?>" class="block w-full text-center bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-300 font-semibold text-lg">
+                            Inscribirme Ahora
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <?php
