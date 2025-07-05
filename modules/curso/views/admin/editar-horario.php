@@ -1,6 +1,4 @@
 <?php
-// filepath: /home/andre/Academics/LPII/Projects/current/modules/curso/views/admin/editar-horario.php
-include_once __DIR__ . '../../../../../public/header.php';
 require_once __DIR__ . '../../../controllers/CursoController.php';
 require_once __DIR__ . '../../../controllers/HorarioController.php';
 
@@ -37,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+include_once __DIR__ . '../../../../../public/header.php';
 ?>
 
 <div class="max-w-2xl mx-auto mt-10">
